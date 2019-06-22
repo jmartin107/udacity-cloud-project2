@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "express": "^4.17.0",
+    "express-async-handler": "^1.1.4",
     "jimp": "^0.6.4"
   }
 }

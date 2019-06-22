@@ -1,6 +1,8 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import {filterImageFromURL, deleteLocalFiles} from './util/util';
+import {filterImageFromURL, deleteLocalFiles, validateFileType} from './util/util';
+import * as path from "path";
+import asyncHandler from "express-async-handler";
 
 (async () => {
 
@@ -29,6 +31,37 @@ import {filterImageFromURL, deleteLocalFiles} from './util/util';
 
   /**************************************************************************** */
 
+  app.get(
+    "/filteredImage",
+    asyncHandler(async (req, res, next) => {
+      let image_url = req.query.image_url;
+
+      if (!image_url) {
+        // const error = new Error("missing image_url");
+        // throw error;
+
+        res.status(400).send('Image URL is missing')
+        next()
+        return
+      }
+
+      try {
+        let isValidURL = validateFileType(image_url);
+        console.log("isValidURL: ", isValidURL);
+        let imagePath = await filterImageFromURL(image_url);
+        let absoluteImagePath = path.join(__dirname, "util", imagePath);
+        res.status(200).sendFile(absoluteImagePath, function(err: any) {
+          if (!err) {
+            deleteLocalFiles([absoluteImagePath]);
+          } else {
+            res.status(400).send("Send File failed");
+          }
+        });
+      } catch (error) {
+        res.status(400).send("File conversion failed." + error);
+      }
+    })
+  );
   //! END @TODO1
   
   // Root Endpoint
