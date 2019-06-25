@@ -9,7 +9,7 @@ import * as path from "path";
 import asyncHandler from "express-async-handler";
 import jwt from "jsonwebtoken";
 import { NextFunction } from "connect";
-import { config } from "./config/config"
+import { config } from "./config/config";
 
 export function requireAuth(req: Request, res: Response, next: NextFunction) {
   if (!req.headers || !req.headers.authorization) {
@@ -78,16 +78,13 @@ export function requireAuth(req: Request, res: Response, next: NextFunction) {
       }
 
       try {
-        let isValidURL = validateFileType(image_url);
-
         let imagePath = await filterImageFromURL(image_url);
         let absoluteImagePath = path.join(__dirname, "util", imagePath);
-        res.status(200).sendFile(absoluteImagePath, function(err: any) {
-          if (!err) {
-            deleteLocalFiles([absoluteImagePath]);
-          } else {
-            res.status(400).send("Send File failed");
+        res.status(200).sendFile(absoluteImagePath, err => {
+          if (err) {
+            return res.status(500).send("Failed to send image file");
           }
+          deleteLocalFiles([absoluteImagePath]);
         });
       } catch (error) {
         res.status(400).send("File conversion failed." + error);
@@ -102,12 +99,8 @@ export function requireAuth(req: Request, res: Response, next: NextFunction) {
   });
 
   app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-    /* now here if your error in development then send stack trace to display whole error,
-    if it's in production then just send error message and log error with some library as winston etc.. */
-    // if(process.env.NODE_ENV === 'production') {
-    //  return res.status(500).send(`something wen't wrong`);
-    //}
-    res.status(500).send(`hey!! we caugth the error 👍👍, ${err.stack} `);
+    console.log('Error: ', err.stack)
+    res.status(500).send('Application Error');
   });
 
   // Start the Server
