@@ -28,7 +28,10 @@
     "typescript": "^3.4.5"
   },
   "dependencies": {
+    "@types/jsonwebtoken": "^8.3.2",
     "express": "^4.17.0",
-    "jimp": "^0.6.4"
+    "express-async-handler": "^1.1.4",
+    "jimp": "^0.6.4",
+    "jsonwebtoken": "^8.5.1"
   }
 }
