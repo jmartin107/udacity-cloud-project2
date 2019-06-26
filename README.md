@@ -33,6 +33,10 @@ Simple service that retrieves a public image file, applies a filter and displays
 
   http://localhost:8082/filteredimage?image_url=https://timedotcom.files.wordpress.com/2019/03/kitten-report.jpg
 
+  **Amazon Hosted:**
+
+   http://project2.jeffmartinudacity.com/filteredimage?image_url=https://timedotcom.files.wordpress.com/2019/03/kitten-report.jpg
+
 * **Notes:**
 
 This endpoint requires authorization. Provide the authentication token using the Authentication header using the value of Bearer [token]
